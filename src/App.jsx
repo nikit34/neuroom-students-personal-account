@@ -44,6 +44,11 @@ export default function App() {
   const [assignmentStatus, setAssignmentStatus] = useState('new');
   const [toast, setToast] = useState('');
   const [showMore, setShowMore] = useState(false);
+  const [hasFiles, setHasFiles] = useState(false);
+  const [version, setVersion] = useState(1);
+  const [shareLink, setShareLink] = useState('');
+  const [shareVersion, setShareVersion] = useState(null);
+  const [approvedVersion, setApprovedVersion] = useState(null);
 
   const previews = useMemo(
     () => files.map((file) => ({ file, url: URL.createObjectURL(file) })),
@@ -65,17 +70,40 @@ export default function App() {
   const handleFiles = (event) => {
     const selected = Array.from(event.target.files || []).slice(0, 6);
     setFiles(selected);
+    if (selected.length > 0) {
+      setVersion((prev) => (hasFiles ? prev + 1 : 1));
+      setHasFiles(true);
+    } else {
+      setHasFiles(false);
+    }
   };
 
   const handleSubmit = () => {
     setAssignmentStatus('review');
-    setToast('Фото отправлены. Учитель проверит работу и пришлет разбор.');
+    setToast('Решение отправлено учителю. Скоро придет разбор.');
   };
 
   const openView = (nextView) => {
     setView(nextView);
     setShowMore(false);
   };
+
+  const handleShare = () => {
+    const link = `https://neuroom.pw/share/${Math.random().toString(36).slice(2, 8)}`;
+    setShareLink(link);
+    setShareVersion(version);
+    setToast('Ссылка создана. Можно отправить родителю.');
+  };
+
+  const handleApprove = () => {
+    setApprovedVersion(version);
+    setToast(`Родитель одобрил версию v${version}.`);
+  };
+
+  const hasShare = shareVersion !== null;
+  const shareIsCurrent = shareVersion === version;
+  const hasApproval = approvedVersion !== null;
+  const approvalIsCurrent = approvedVersion === version;
 
   return (
     <div className="page">
@@ -145,6 +173,7 @@ export default function App() {
                     <button className="btn btn--ghost" onClick={() => openView('profile')}>
                       Профиль
                     </button>
+                    <button className="btn btn--ghost">Задать вопрос</button>
                   </div>
                 )}
               </div>
@@ -181,16 +210,19 @@ export default function App() {
 
                 <div className="action-bar">
                   <div className="action-main">
-                    <button className="btn btn--primary" onClick={() => openView('assignment')}>
-                      Сдать ДЗ
-                    </button>
-                    <button className="btn btn--ghost" onClick={() => openView('history')}>
-                      Прошлые ДЗ
-                    </button>
-                  </div>
-                  <div className="action-secondary">
-                    <button className="btn btn--quiet">Написать учителю</button>
-                    <button className="btn btn--quiet">Задать вопрос</button>
+                    <div className="action-primary">
+                      <button className="btn btn--primary" onClick={() => openView('assignment')}>
+                        Сдать ДЗ
+                      </button>
+                      <div className="action-help">
+                        Нужно уточнить? <button className="btn btn--text">Написать учителю</button>
+                      </div>
+                    </div>
+                    <div className="action-secondary">
+                      <button className="btn btn--ghost" onClick={() => openView('history')}>
+                        Прошлые ДЗ
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -300,11 +332,11 @@ export default function App() {
                 <StatusPill status={assignmentStatus} />
               </div>
 
-              <div className="grid grid--two">
-                <div className="card">
-                  <div className="card-title">Задание от учителя</div>
-                  <p className="card-text">
-                    Упр. 416 (стр. 9–10). Озаглавить текст. Списать, раскрывая скобки,
+                <div className="grid grid--two">
+                  <div className="card">
+                    <div className="card-title">Задание от учителя</div>
+                    <p className="card-text">
+                      Упр. 416 (стр. 9–10). Озаглавить текст. Списать, раскрывая скобки,
                     вставить пропущенные буквы и знаки препинания. Подчеркнуть грамматические основы.
                   </p>
                   <div className="card-meta">
@@ -314,10 +346,10 @@ export default function App() {
                   <div className="teacher-note">
                     <strong>Подсказка:</strong> сначала выдели грамматические основы, потом проверь знаки.
                   </div>
-                </div>
+                  </div>
 
-                <div className="card">
-                  <div className="card-title">Сделай фото решения</div>
+                  <div className="card">
+                    <div className="card-title">Сделай фото решения</div>
                   <div className="upload">
                     <input
                       className="upload-input"
@@ -346,17 +378,64 @@ export default function App() {
                     </div>
                   )}
 
-                  <div className="upload-actions">
-                    <button className="btn btn--ghost">Сделать фото с камеры</button>
-                    <button className="btn btn--primary" onClick={handleSubmit}>
-                      Отправить на проверку
-                    </button>
+                    <div className="upload-actions">
+                      <button className="btn btn--ghost">Сделать фото с камеры</button>
+                      <button className="btn btn--primary" onClick={handleSubmit}>
+                        Отправить учителю
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="card">
-                <div className="card-title">Проверь перед отправкой</div>
+                <div className="card">
+                  <div className="card-title">Поделиться с родителем (необязательно)</div>
+                  <div className="approval-row">
+                    <div>
+                      <div className="approval-title">Текущая версия решения</div>
+                      <div className="approval-meta">v{version} · {files.length || 0} фото</div>
+                    </div>
+                    <button className="btn btn--ghost" onClick={handleShare}>
+                      Создать ссылку
+                    </button>
+                  </div>
+                  {hasShare && (
+                    <div className="approval-box">
+                      <div className="approval-status">
+                        {shareIsCurrent ? 'Ссылка актуальна' : 'Ссылка на прошлую версию'}
+                      </div>
+                      <div className="approval-link">{shareLink}</div>
+                      <div className="approval-note">
+                        {shareIsCurrent
+                          ? 'Отправь ссылку родителю в Telegram или мессенджер.'
+                          : `Ссылка была создана для версии v${shareVersion}. Чтобы родитель видел актуальную работу, создай новую.`}
+                      </div>
+                    </div>
+                  )}
+                  <div className="approval-row approval-row--compact">
+                    <div>
+                      <div className="approval-title">Одобрение родителя</div>
+                      <div className="approval-meta">
+                        {!hasApproval && 'Пока не одобрено'}
+                        {hasApproval && approvalIsCurrent && `Одобрено для версии v${approvedVersion}`}
+                        {hasApproval && !approvalIsCurrent && `Одобрено для версии v${approvedVersion}, текущая v${version}`}
+                      </div>
+                    </div>
+                    <button className="btn btn--quiet" onClick={handleApprove}>
+                      Родитель одобрил
+                    </button>
+                  </div>
+                  <div className="approval-footnote">
+                    Одобрение фиксируется за версией. После любых правок нужна новая ссылка.
+                  </div>
+                  {hasApproval && !approvalIsCurrent && (
+                    <div className="approval-warning">
+                      Родитель одобрил другую версию. Если ты что-то дописал — отправь новую ссылку.
+                    </div>
+                  )}
+                </div>
+
+                <div className="card">
+                  <div className="card-title">Проверь перед отправкой</div>
                 <div className="grid grid--three">
                   <div className="check-card">
                     <div className="check-title">Вся страница в кадре</div>

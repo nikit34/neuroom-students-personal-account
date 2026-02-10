@@ -371,10 +371,8 @@ body {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 18px 22px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
   gap: 16px;
-  flex-wrap: wrap;
 }
 
 .action-main,
@@ -382,6 +380,29 @@ body {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.action-main {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.action-primary {
+  display: grid;
+  gap: 10px;
+}
+
+.action-help {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.action-help .btn--text {
+  margin-left: 6px;
+}
+
+.action-secondary {
+  align-items: center;
 }
 
 .btn {
@@ -416,6 +437,79 @@ body {
   background: transparent;
   border: 1px dashed rgba(28, 27, 41, 0.12);
   color: var(--ink-soft);
+}
+
+.btn--text {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.approval-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.approval-row--compact {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+.approval-title {
+  font-weight: 600;
+}
+
+.approval-meta {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.approval-box {
+  border-radius: 16px;
+  padding: 14px;
+  background: #f7f7fb;
+  display: grid;
+  gap: 6px;
+}
+
+.approval-status {
+  font-weight: 600;
+}
+
+.approval-link {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px dashed rgba(28, 27, 41, 0.1);
+  width: fit-content;
+}
+
+.approval-note {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.approval-footnote {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 8px;
+}
+
+.approval-warning {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #fff1ec;
+  color: #b34a2f;
+  font-size: 12px;
 }
 
 .btn--back {
@@ -909,6 +1003,10 @@ body {
   .action-main .btn,
   .action-secondary .btn {
     flex: 1 1 160px;
+  }
+
+  .action-primary {
+    width: 100%;
   }
 
   .feedback-hero {
