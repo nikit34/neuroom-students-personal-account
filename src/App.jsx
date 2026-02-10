@@ -40,6 +40,13 @@ function StatusPill({ status }) {
 
 export default function App() {
   const MAX_FILES = 6;
+  const LEVEL_DATA = {
+    currentLevel: 'Уровень 3',
+    nextLevel: 'Уровень 4',
+    currentXp: 5734,
+    targetXp: 6300,
+    streakDays: 7
+  };
   const [view, setView] = useState('home');
   const [files, setFiles] = useState([]);
   const [assignmentStatus, setAssignmentStatus] = useState('new');
@@ -178,6 +185,12 @@ export default function App() {
   const shareIsCurrent = shareVersion === version;
   const hasApproval = approvedVersion !== null;
   const approvalIsCurrent = approvedVersion === version;
+  const levelPercent = Math.min(
+    100,
+    Math.round((LEVEL_DATA.currentXp / LEVEL_DATA.targetXp) * 100)
+  );
+  const levelProgressDeg = Math.round((levelPercent / 100) * 360);
+  const xpRemaining = Math.max(LEVEL_DATA.targetXp - LEVEL_DATA.currentXp, 0);
   const friendShareBeforeLink = useMemo(() => {
     const params = new URLSearchParams({
       for: 'friend',
@@ -341,11 +354,30 @@ export default function App() {
                     </p>
                   </div>
                   <div className="hero-side">
-                    <div className="progress-ring">
-                      <div className="progress-ring__value">72%</div>
+                    <div className="level-header">
+                      <div className="level-kicker">Твой прогресс</div>
+                      <div className="level-route">{LEVEL_DATA.currentLevel} → {LEVEL_DATA.nextLevel}</div>
                     </div>
-                    <div className="hero-side-title">Неделя без пропусков</div>
-                    <div className="hero-side-note">Еще 1 задание и получишь новый уровень</div>
+                    <div className="level-main">
+                      <div
+                        className="progress-ring"
+                        style={{
+                          background: `conic-gradient(var(--accent-2) 0 ${levelProgressDeg}deg, #e9f4f4 ${levelProgressDeg}deg 360deg)`
+                        }}
+                      >
+                        <div className="progress-ring__value">{levelPercent}%</div>
+                      </div>
+                      <div className="level-details">
+                        <div className="level-xp">{LEVEL_DATA.currentXp} / {LEVEL_DATA.targetXp} XP</div>
+                        <div className="level-note">Осталось {xpRemaining} XP до следующего уровня</div>
+                        <div className="level-streak">Серия: {LEVEL_DATA.streakDays} дней без пропусков</div>
+                      </div>
+                    </div>
+                    <div className="xp-sources">
+                      <span className="xp-chip">+120 за сдачу ДЗ</span>
+                      <span className="xp-chip">+80 за просмотр разбора</span>
+                      <span className="xp-chip">+150 за квиз AI‑репетитора</span>
+                    </div>
                   </div>
                 </div>
 
