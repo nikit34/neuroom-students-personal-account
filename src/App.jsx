@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const statusMap = {
   new: { label: 'Новое', className: 'status status--new' },
@@ -39,12 +39,12 @@ function StatusPill({ status }) {
 }
 
 export default function App() {
+  const MAX_FILES = 6;
   const [view, setView] = useState('home');
   const [files, setFiles] = useState([]);
   const [assignmentStatus, setAssignmentStatus] = useState('new');
   const [toast, setToast] = useState('');
   const [showMore, setShowMore] = useState(false);
-  const [hasFiles, setHasFiles] = useState(false);
   const [version, setVersion] = useState(1);
   const [shareLink, setShareLink] = useState('');
   const [shareVersion, setShareVersion] = useState(null);
@@ -52,6 +52,8 @@ export default function App() {
   const [includeGradeInFriendShare, setIncludeGradeInFriendShare] = useState(false);
   const [includeMarksInFriendShare, setIncludeMarksInFriendShare] = useState(false);
   const [friendShareToken] = useState(() => Math.random().toString(36).slice(2, 8));
+  const cameraInputRef = useRef(null);
+  const galleryInputRef = useRef(null);
 
   const previews = useMemo(
     () => files.map((file) => ({ file, url: URL.createObjectURL(file) })),
@@ -70,15 +72,41 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [toast]);
 
-  const handleFiles = (event) => {
-    const selected = Array.from(event.target.files || []).slice(0, 6);
-    setFiles(selected);
-    if (selected.length > 0) {
-      setVersion((prev) => (hasFiles ? prev + 1 : 1));
-      setHasFiles(true);
-    } else {
-      setHasFiles(false);
-    }
+  const appendFiles = (selectedFiles) => {
+    if (!selectedFiles.length) return;
+
+    setFiles((prev) => {
+      const remainingSlots = Math.max(0, MAX_FILES - prev.length);
+      if (remainingSlots === 0) {
+        setToast(`Можно добавить не больше ${MAX_FILES} фото.`);
+        return prev;
+      }
+
+      const toAdd = selectedFiles.slice(0, remainingSlots);
+      if (!toAdd.length) return prev;
+
+      const hadFilesBefore = prev.length > 0;
+      setVersion((currentVersion) => (hadFilesBefore ? currentVersion + 1 : 1));
+      return [...prev, ...toAdd];
+    });
+  };
+
+  const handleCameraCapture = (event) => {
+    const selected = Array.from(event.target.files || []);
+    appendFiles(selected);
+    event.target.value = '';
+  };
+
+  const handleGallerySelect = (event) => {
+    const selected = Array.from(event.target.files || []);
+    appendFiles(selected);
+    event.target.value = '';
+  };
+
+  const handleClearPhotos = () => {
+    setFiles([]);
+    setVersion(1);
+    setToast('Фото очищены. Можно снять заново.');
   };
 
   const handleSubmit = () => {
@@ -439,20 +467,45 @@ export default function App() {
 
                   <div className="card">
                     <div className="card-title">Сделай фото решения</div>
-                  <div className="upload">
-                    <input
-                      className="upload-input"
-                      type="file"
-                      id="file-input"
-                      accept="image/*"
-                      multiple
-                      onChange={handleFiles}
-                    />
-                    <label className="upload-label" htmlFor="file-input">
-                      <span>Перетащи фото сюда или нажми, чтобы выбрать</span>
-                      <span className="upload-hint">Можно до 6 фото. Лучше без бликов.</span>
-                    </label>
-                  </div>
+                    <div className="capture-panel">
+                      <input
+                        ref={cameraInputRef}
+                        className="upload-input"
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        onChange={handleCameraCapture}
+                      />
+                      <input
+                        ref={galleryInputRef}
+                        className="upload-input"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleGallerySelect}
+                      />
+                      <button
+                        className="btn btn--primary capture-btn"
+                        onClick={() => cameraInputRef.current?.click()}
+                      >
+                        Сделать фото
+                      </button>
+                      <div className="capture-subactions">
+                        <button
+                          className="btn btn--ghost btn--small"
+                          onClick={() => galleryInputRef.current?.click()}
+                        >
+                          Из галереи
+                        </button>
+                        <button
+                          className="btn btn--quiet btn--small"
+                          onClick={handleClearPhotos}
+                        >
+                          Очистить
+                        </button>
+                      </div>
+                      <div className="upload-hint">До {MAX_FILES} фото. Снимай страницы по порядку.</div>
+                    </div>
 
                   {files.length === 0 ? (
                     <div className="upload-empty">Фото пока не добавлены</div>
@@ -468,7 +521,6 @@ export default function App() {
                   )}
 
                     <div className="upload-actions">
-                      <button className="btn btn--ghost">Сделать фото с камеры</button>
                       <button className="btn btn--primary" onClick={handleSubmit}>
                         Отправить учителю
                       </button>
