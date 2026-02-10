@@ -305,6 +305,25 @@ export default function App() {
           {view === 'home' && (
             <section className="view">
               <div className="section">
+                <div className="cta-panel">
+                  <div>
+                    <div className="cta-title">Сдать домашнее задание</div>
+                    <div className="cta-note">Самый быстрый путь к разбору от учителя</div>
+                  </div>
+                  <div className="cta-actions">
+                    <button
+                      className="btn btn--primary btn--submit-main"
+                      onClick={() => openView('assignment')}
+                    >
+                      Сдать ДЗ
+                    </button>
+                    <div className="cta-links">
+                      <button className="btn btn--text">Написать учителю</button>
+                      <button className="btn btn--text">Задать вопрос</button>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="section-head">
                   <div>
                     <div className="section-title">Сейчас важно</div>
@@ -327,22 +346,6 @@ export default function App() {
                     </div>
                     <div className="hero-side-title">Неделя без пропусков</div>
                     <div className="hero-side-note">Еще 1 задание и получишь новый уровень</div>
-                  </div>
-                </div>
-
-                <div className="cta-panel">
-                  <div>
-                    <div className="cta-title">Сдать домашнее задание</div>
-                    <div className="cta-note">Самый быстрый путь к разбору от учителя</div>
-                  </div>
-                  <div className="cta-actions">
-                    <button className="btn btn--primary" onClick={() => openView('assignment')}>
-                      Сдать ДЗ
-                    </button>
-                    <div className="cta-links">
-                      <button className="btn btn--text">Написать учителю</button>
-                      <button className="btn btn--text">Задать вопрос</button>
-                    </div>
                   </div>
                 </div>
 

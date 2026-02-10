@@ -380,11 +380,10 @@ body {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 18px 22px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  justify-content: space-between;
   gap: 16px;
-  flex-wrap: wrap;
 }
 
 .cta-title {
@@ -399,15 +398,26 @@ body {
 
 .cta-actions {
   display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.cta-links {
+  display: flex;
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
 }
 
-.cta-links {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+.btn--submit-main {
+  min-height: 68px;
+  padding: 14px 34px;
+  border-radius: 999px;
+  font-size: clamp(28px, 3.2vw, 40px);
+  font-weight: 700;
+  line-height: 1;
 }
 
 .flow-steps {
@@ -1280,15 +1290,20 @@ body {
 
 @media (max-width: 700px) {
   .cta-panel {
+    grid-template-columns: 1fr;
     align-items: flex-start;
   }
 
   .cta-actions {
     width: 100%;
+    display: grid;
+    justify-items: stretch;
   }
 
-  .cta-actions .btn {
-    flex: 1 1 160px;
+  .cta-links {
+    display: grid;
+    justify-items: start;
+    gap: 8px;
   }
 
   .flow-steps {
