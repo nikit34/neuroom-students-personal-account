@@ -50,8 +50,8 @@ export default function App() {
   const [shareVersion, setShareVersion] = useState(null);
   const [approvedVersion, setApprovedVersion] = useState(null);
   const [includeGradeInFriendShare, setIncludeGradeInFriendShare] = useState(false);
-  const [includeMarksInFriendShare, setIncludeMarksInFriendShare] = useState(false);
-  const [friendShareToken] = useState(() => Math.random().toString(36).slice(2, 8));
+  const [friendShareTokenBefore] = useState(() => Math.random().toString(36).slice(2, 8));
+  const [friendShareTokenAfter] = useState(() => Math.random().toString(36).slice(2, 8));
   const cameraInputRef = useRef(null);
   const galleryInputRef = useRef(null);
 
@@ -178,30 +178,51 @@ export default function App() {
   const shareIsCurrent = shareVersion === version;
   const hasApproval = approvedVersion !== null;
   const approvalIsCurrent = approvedVersion === version;
-  const friendShareLink = useMemo(() => {
+  const friendShareBeforeLink = useMemo(() => {
     const params = new URLSearchParams({
       for: 'friend',
+      phase: 'before',
+      grade: '0',
+      token: friendShareTokenBefore
+    });
+    return `https://neuroom.pw/share/homework/416?${params.toString()}`;
+  }, [friendShareTokenBefore]);
+
+  const friendShareAfterLink = useMemo(() => {
+    const params = new URLSearchParams({
+      for: 'friend',
+      phase: 'after',
       grade: includeGradeInFriendShare ? '1' : '0',
-      marks: includeMarksInFriendShare ? '1' : '0',
-      token: friendShareToken
+      token: friendShareTokenAfter
     });
     return `https://neuroom.pw/share/homework/1502?${params.toString()}`;
-  }, [friendShareToken, includeGradeInFriendShare, includeMarksInFriendShare]);
+  }, [friendShareTokenAfter, includeGradeInFriendShare]);
 
-  const friendShareSummary = useMemo(() => {
-    const gradeText = includeGradeInFriendShare ? 'с оценкой' : 'без оценки';
-    const marksText = includeMarksInFriendShare ? 'с помарками' : 'без помарок';
-    return `${gradeText}, ${marksText}`;
-  }, [includeGradeInFriendShare, includeMarksInFriendShare]);
+  const friendShareAfterSummary = useMemo(
+    () => (includeGradeInFriendShare ? 'с оценкой' : 'без оценки'),
+    [includeGradeInFriendShare]
+  );
 
-  const handleCopyFriendLink = async () => {
-    await copyText(friendShareLink, 'Ссылка для друга скопирована.');
+  const handleCopyFriendBeforeLink = async () => {
+    await copyText(friendShareBeforeLink, 'Ссылка для друга (до проверки) скопирована.');
   };
 
-  const handleTelegramFriendShare = () => {
+  const handleTelegramFriendBeforeShare = () => {
     openTelegramShare(
-      friendShareLink,
-      `Смотри, как я решил ДЗ (${friendShareSummary}).`
+      friendShareBeforeLink,
+      'Смотри, я решил ДЗ. Зацени до проверки.'
+    );
+    setToast('Открыт Telegram для отправки другу.');
+  };
+
+  const handleCopyFriendAfterLink = async () => {
+    await copyText(friendShareAfterLink, 'Ссылка для друга (после проверки) скопирована.');
+  };
+
+  const handleTelegramFriendAfterShare = () => {
+    openTelegramShare(
+      friendShareAfterLink,
+      `Смотри, как я решил ДЗ (${friendShareAfterSummary}).`
     );
     setToast('Открыт Telegram для отправки другу.');
   };
@@ -583,6 +604,25 @@ export default function App() {
                   )}
                 </div>
 
+                <div className="card share-card">
+                  <div>
+                    <div className="card-title">Поделиться с другом до проверки</div>
+                    <p className="card-text">
+                      Отправь другу черновик решения. Здесь всегда без оценки, потому что проверка еще не завершена.
+                    </p>
+                  </div>
+                  <div className="share-stage">Режим: до проверки</div>
+                  <div className="share-link">{friendShareBeforeLink}</div>
+                  <div className="share-actions">
+                    <button className="btn btn--ghost" onClick={handleCopyFriendBeforeLink}>
+                      Копировать ссылку
+                    </button>
+                    <button className="btn btn--telegram" onClick={handleTelegramFriendBeforeShare}>
+                      Отправить в Telegram
+                    </button>
+                  </div>
+                </div>
+
                 <div className="card">
                   <div className="card-title">Проверь перед отправкой</div>
                 <div className="grid grid--three">
@@ -694,11 +734,12 @@ export default function App() {
 
               <div className="card share-card">
                 <div>
-                  <div className="card-title">Поделиться решением с другом</div>
+                  <div className="card-title">Поделиться с другом после проверки</div>
                   <p className="card-text">
-                    Выбери, что показывать в ссылке. Это отдельная ссылка для шаринга.
+                    Можно выбрать, показывать оценку или нет при формировании ссылки.
                   </p>
                 </div>
+                <div className="share-stage">Режим: после проверки</div>
                 <div className="share-controls">
                   <label className="toggle-option">
                     <input
@@ -708,22 +749,14 @@ export default function App() {
                     />
                     <span>Показывать оценку</span>
                   </label>
-                  <label className="toggle-option">
-                    <input
-                      type="checkbox"
-                      checked={includeMarksInFriendShare}
-                      onChange={(event) => setIncludeMarksInFriendShare(event.target.checked)}
-                    />
-                    <span>Показывать помарки учителя</span>
-                  </label>
                 </div>
-                <div className="share-summary">Вариант ссылки: {friendShareSummary}</div>
-                <div className="share-link">{friendShareLink}</div>
+                <div className="share-summary">Вариант ссылки: {friendShareAfterSummary}</div>
+                <div className="share-link">{friendShareAfterLink}</div>
                 <div className="share-actions">
-                  <button className="btn btn--ghost" onClick={handleCopyFriendLink}>
+                  <button className="btn btn--ghost" onClick={handleCopyFriendAfterLink}>
                     Копировать ссылку
                   </button>
-                  <button className="btn btn--telegram" onClick={handleTelegramFriendShare}>
+                  <button className="btn btn--telegram" onClick={handleTelegramFriendAfterShare}>
                     Отправить в Telegram
                   </button>
                 </div>

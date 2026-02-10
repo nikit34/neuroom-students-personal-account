@@ -576,6 +576,16 @@ body {
   gap: 12px;
 }
 
+.share-stage {
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f7f7fb;
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
 .share-controls {
   display: flex;
   gap: 12px;
