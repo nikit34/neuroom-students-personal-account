@@ -49,6 +49,9 @@ export default function App() {
   const [shareLink, setShareLink] = useState('');
   const [shareVersion, setShareVersion] = useState(null);
   const [approvedVersion, setApprovedVersion] = useState(null);
+  const [includeGradeInFriendShare, setIncludeGradeInFriendShare] = useState(false);
+  const [includeMarksInFriendShare, setIncludeMarksInFriendShare] = useState(false);
+  const [friendShareToken] = useState(() => Math.random().toString(36).slice(2, 8));
 
   const previews = useMemo(
     () => files.map((file) => ({ file, url: URL.createObjectURL(file) })),
@@ -88,11 +91,54 @@ export default function App() {
     setShowMore(false);
   };
 
-  const handleShare = () => {
-    const link = `https://neuroom.pw/share/${Math.random().toString(36).slice(2, 8)}`;
+  const createParentLink = (targetVersion) => {
+    const params = new URLSearchParams({
+      for: 'parent',
+      v: String(targetVersion),
+      token: Math.random().toString(36).slice(2, 8)
+    });
+    return `https://neuroom.pw/share/homework/416?${params.toString()}`;
+  };
+
+  const getCurrentParentLink = () => {
+    if (hasShare && shareIsCurrent) {
+      return shareLink;
+    }
+    const link = createParentLink(version);
     setShareLink(link);
     setShareVersion(version);
+    return link;
+  };
+
+  const copyText = async (value, successMessage) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setToast(successMessage);
+    } catch {
+      setToast('Не получилось скопировать ссылку.');
+    }
+  };
+
+  const openTelegramShare = (link, text) => {
+    const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`;
+    window.open(telegramUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleShare = () => {
+    const link = getCurrentParentLink();
     setToast('Ссылка создана. Можно отправить родителю.');
+    return link;
+  };
+
+  const handleCopyParentLink = async () => {
+    const link = getCurrentParentLink();
+    await copyText(link, 'Ссылка для родителя скопирована.');
+  };
+
+  const handleTelegramParentShare = () => {
+    const link = getCurrentParentLink();
+    openTelegramShare(link, `Проверь, пожалуйста, моё ДЗ. Версия v${version}.`);
+    setToast('Открыт Telegram для отправки родителю.');
   };
 
   const handleApprove = () => {
@@ -104,6 +150,33 @@ export default function App() {
   const shareIsCurrent = shareVersion === version;
   const hasApproval = approvedVersion !== null;
   const approvalIsCurrent = approvedVersion === version;
+  const friendShareLink = useMemo(() => {
+    const params = new URLSearchParams({
+      for: 'friend',
+      grade: includeGradeInFriendShare ? '1' : '0',
+      marks: includeMarksInFriendShare ? '1' : '0',
+      token: friendShareToken
+    });
+    return `https://neuroom.pw/share/homework/1502?${params.toString()}`;
+  }, [friendShareToken, includeGradeInFriendShare, includeMarksInFriendShare]);
+
+  const friendShareSummary = useMemo(() => {
+    const gradeText = includeGradeInFriendShare ? 'с оценкой' : 'без оценки';
+    const marksText = includeMarksInFriendShare ? 'с помарками' : 'без помарок';
+    return `${gradeText}, ${marksText}`;
+  }, [includeGradeInFriendShare, includeMarksInFriendShare]);
+
+  const handleCopyFriendLink = async () => {
+    await copyText(friendShareLink, 'Ссылка для друга скопирована.');
+  };
+
+  const handleTelegramFriendShare = () => {
+    openTelegramShare(
+      friendShareLink,
+      `Смотри, как я решил ДЗ (${friendShareSummary}).`
+    );
+    setToast('Открыт Telegram для отправки другу.');
+  };
 
   return (
     <div className="page">
@@ -159,6 +232,7 @@ export default function App() {
             <div className="topbar-left">
               <div className="date-chip">10 февраля 2026</div>
               <div className="weather-chip">Сегодня: чистый лист, без долгов</div>
+              <div className="mobile-student">Гермиона • 5Б</div>
             </div>
             <div className="topbar-right">
               <div className="more-wrapper">
@@ -173,7 +247,6 @@ export default function App() {
                     <button className="btn btn--ghost" onClick={() => openView('profile')}>
                       Профиль
                     </button>
-                    <button className="btn btn--ghost">Задать вопрос</button>
                   </div>
                 )}
               </div>
@@ -208,21 +281,34 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="action-bar">
-                  <div className="action-main">
-                    <div className="action-primary">
-                      <button className="btn btn--primary" onClick={() => openView('assignment')}>
-                        Сдать ДЗ
-                      </button>
-                      <div className="action-help">
-                        Нужно уточнить? <button className="btn btn--text">Написать учителю</button>
-                      </div>
+                <div className="cta-panel">
+                  <div>
+                    <div className="cta-title">Сдать домашнее задание</div>
+                    <div className="cta-note">Самый быстрый путь к разбору от учителя</div>
+                  </div>
+                  <div className="cta-actions">
+                    <button className="btn btn--primary" onClick={() => openView('assignment')}>
+                      Сдать ДЗ
+                    </button>
+                    <div className="cta-links">
+                      <button className="btn btn--text">Написать учителю</button>
+                      <button className="btn btn--text">Задать вопрос</button>
                     </div>
-                    <div className="action-secondary">
-                      <button className="btn btn--ghost" onClick={() => openView('history')}>
-                        Прошлые ДЗ
-                      </button>
-                    </div>
+                  </div>
+                </div>
+
+                <div className="flow-steps">
+                  <div className="flow-step is-current">
+                    <div className="flow-title">1. Сдать ДЗ</div>
+                    <div className="flow-note">1–3 фото, без бликов</div>
+                  </div>
+                  <div className="flow-step is-ready">
+                    <div className="flow-title">2. Посмотреть разбор</div>
+                    <div className="flow-note">Главное — обратная связь. Разбор уже готов.</div>
+                  </div>
+                  <div className="flow-step">
+                    <div className="flow-title">3. Закрепить тему</div>
+                    <div className="flow-note">Мини‑квизы → ачивка</div>
                   </div>
                 </div>
               </div>
@@ -233,6 +319,9 @@ export default function App() {
                     <div className="section-title">Задания</div>
                     <div className="section-note">Что в работе и что уже проверено</div>
                   </div>
+                  <button className="btn btn--ghost btn--small" onClick={() => openView('history')}>
+                    Прошлые ДЗ
+                  </button>
                 </div>
 
                 <div className="grid grid--three">
@@ -394,9 +483,17 @@ export default function App() {
                       <div className="approval-title">Текущая версия решения</div>
                       <div className="approval-meta">v{version} · {files.length || 0} фото</div>
                     </div>
-                    <button className="btn btn--ghost" onClick={handleShare}>
-                      Создать ссылку
-                    </button>
+                    <div className="share-actions">
+                      <button className="btn btn--ghost" onClick={handleShare}>
+                        Создать ссылку
+                      </button>
+                      <button className="btn btn--ghost" onClick={handleCopyParentLink}>
+                        Копировать
+                      </button>
+                      <button className="btn btn--telegram" onClick={handleTelegramParentShare}>
+                        Telegram
+                      </button>
+                    </div>
                   </div>
                   {hasShare && (
                     <div className="approval-box">
@@ -543,6 +640,43 @@ export default function App() {
                 </div>
               </div>
 
+              <div className="card share-card">
+                <div>
+                  <div className="card-title">Поделиться решением с другом</div>
+                  <p className="card-text">
+                    Выбери, что показывать в ссылке. Это отдельная ссылка для шаринга.
+                  </p>
+                </div>
+                <div className="share-controls">
+                  <label className="toggle-option">
+                    <input
+                      type="checkbox"
+                      checked={includeGradeInFriendShare}
+                      onChange={(event) => setIncludeGradeInFriendShare(event.target.checked)}
+                    />
+                    <span>Показывать оценку</span>
+                  </label>
+                  <label className="toggle-option">
+                    <input
+                      type="checkbox"
+                      checked={includeMarksInFriendShare}
+                      onChange={(event) => setIncludeMarksInFriendShare(event.target.checked)}
+                    />
+                    <span>Показывать помарки учителя</span>
+                  </label>
+                </div>
+                <div className="share-summary">Вариант ссылки: {friendShareSummary}</div>
+                <div className="share-link">{friendShareLink}</div>
+                <div className="share-actions">
+                  <button className="btn btn--ghost" onClick={handleCopyFriendLink}>
+                    Копировать ссылку
+                  </button>
+                  <button className="btn btn--telegram" onClick={handleTelegramFriendShare}>
+                    Отправить в Telegram
+                  </button>
+                </div>
+              </div>
+
               <div className="card ai-card">
                 <div>
                   <div className="card-title">AI‑репетитор: улучшить результат</div>
@@ -657,6 +791,42 @@ export default function App() {
             </section>
           )}
         </main>
+      </div>
+
+      <div className="mobile-dock">
+        <button
+          className={`dock-btn ${view === 'home' ? 'is-active' : ''}`}
+          onClick={() => openView('home')}
+        >
+          Главная
+        </button>
+        <button
+          className={`dock-btn ${view === 'assignment' ? 'is-active' : ''}`}
+          onClick={() => openView('assignment')}
+        >
+          Сдать
+        </button>
+        <button
+          className={`dock-btn ${view === 'history' ? 'is-active' : ''}`}
+          onClick={() => openView('history')}
+        >
+          История
+        </button>
+        <div className="dock-item">
+          <button className="dock-btn" onClick={() => setShowMore((prev) => !prev)}>
+            Ещё
+          </button>
+          {showMore && (
+            <div className="dock-menu">
+              <button className="btn btn--ghost" onClick={() => openView('feedback')}>
+                Обратная связь
+              </button>
+              <button className="btn btn--ghost" onClick={() => openView('profile')}>
+                Профиль
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className={`toast ${toast ? 'show' : ''}`}>{toast}</div>
