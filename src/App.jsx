@@ -468,11 +468,8 @@ export default function App() {
               </div>
 
               <div className="feedback-hero">
-                <div className="score-card">
-                  <div className="score">4</div>
-                  <div className="score-label">Твоя оценка</div>
-                </div>
                 <div className="score-summary">
+                  <div className="score-eyebrow">Главное — обратная связь, не отметка</div>
                   <h2>Молодец, что справился с объемным текстом!</h2>
                   <p>
                     Обрати внимание на правило написания НЕ с глаголами — это самая серьезная ошибка в работе.
@@ -483,6 +480,17 @@ export default function App() {
                     <span className="tag">Сильная сторона: пунктуация</span>
                     <span className="tag">Рекомендация: повторить тему</span>
                   </div>
+                  <div className="next-step">
+                    <div>
+                      <div className="next-title">Следующий шаг</div>
+                      <div className="next-note">Исправь ошибки вместе с AI‑репетитором и улучши результат.</div>
+                    </div>
+                    <button className="btn btn--primary">Перейти к AI‑репетитору</button>
+                  </div>
+                </div>
+                <div className="score-card score-card--mini">
+                  <div className="score">4</div>
+                  <div className="score-label">Оценка</div>
                 </div>
               </div>
 
@@ -508,6 +516,7 @@ export default function App() {
                       <div className="error-tip">Подсказка: {error.tip}</div>
                     </div>
                   ))}
+                  <button className="btn btn--ghost">Исправить ошибки с AI‑репетитором</button>
                 </div>
 
                 <div className="card">
@@ -529,6 +538,20 @@ export default function App() {
                     <div className="legend-item"><span className="legend-dot">3</span> Прямая речь</div>
                   </div>
                   <button className="btn btn--ghost">Скачать фото с пометками</button>
+                </div>
+              </div>
+
+              <div className="card ai-card">
+                <div>
+                  <div className="card-title">AI‑репетитор: улучшить результат</div>
+                  <p className="card-text">
+                    Получи персональные упражнения по твоим ошибкам. После тренировки можно отправить
+                    улучшенную версию работы учителю.
+                  </p>
+                </div>
+                <div className="ai-actions">
+                  <button className="btn btn--primary">Начать тренировку</button>
+                  <button className="btn btn--ghost">План исправлений</button>
                 </div>
               </div>
             </section>

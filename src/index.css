@@ -753,7 +753,7 @@ body {
 
 .feedback-hero {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 1.2fr auto;
   gap: 20px;
   align-items: center;
 }
@@ -767,6 +767,13 @@ body {
   text-align: center;
 }
 
+.score-card--mini {
+  background: #f7f7fb;
+  color: var(--bg-ink);
+  border: 1px solid var(--border);
+  min-width: 120px;
+}
+
 .score {
   font-family: "Unbounded", sans-serif;
   font-size: 48px;
@@ -775,6 +782,18 @@ body {
 .score-label {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.7);
+}
+
+.score-card--mini .score-label {
+  color: var(--ink-soft);
+}
+
+.score-eyebrow {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
 }
 
 .score-summary h2 {
@@ -797,6 +816,28 @@ body {
   border-radius: 999px;
   background: #f7f7fb;
   font-size: 12px;
+}
+
+.next-step {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #fff7f4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.next-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.next-note {
+  font-size: 12px;
+  color: var(--ink-soft);
 }
 
 .error-card {
@@ -900,6 +941,20 @@ body {
   display: grid;
   place-items: center;
   font-size: 11px;
+}
+
+.ai-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ai-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .goal {
