@@ -483,7 +483,9 @@ export default function App() {
                   <div className="next-step">
                     <div>
                       <div className="next-title">Следующий шаг</div>
-                      <div className="next-note">Исправь ошибки вместе с AI‑репетитором и улучши результат.</div>
+                      <div className="next-note">
+                        Параллельный путь: мини‑квизы от простого к сложному. Домашка закроется по дедлайну.
+                      </div>
                     </div>
                     <button className="btn btn--primary">Перейти к AI‑репетитору</button>
                   </div>
@@ -516,7 +518,7 @@ export default function App() {
                       <div className="error-tip">Подсказка: {error.tip}</div>
                     </div>
                   ))}
-                  <button className="btn btn--ghost">Исправить ошибки с AI‑репетитором</button>
+                  <button className="btn btn--ghost">Закрепить тему с AI‑репетитором</button>
                 </div>
 
                 <div className="card">
@@ -545,9 +547,15 @@ export default function App() {
                 <div>
                   <div className="card-title">AI‑репетитор: улучшить результат</div>
                   <p className="card-text">
-                    Получи персональные упражнения по твоим ошибкам. После тренировки можно отправить
-                    улучшенную версию работы учителю.
+                    Параллельный путь: серия мини‑квизов по твоим ошибкам. Домашка для учителя закрывается
+                    по дедлайну, а здесь ты закрепляешь тему и зарабатываешь ачивку.
                   </p>
+                  <div className="quiz-track">
+                    <div className="quiz-step is-done">Базовый уровень</div>
+                    <div className="quiz-step">Средний уровень</div>
+                    <div className="quiz-step">Сложный уровень</div>
+                    <div className="quiz-badge">Ачивка: «Квадратные уравнения — done»</div>
+                  </div>
                 </div>
                 <div className="ai-actions">
                   <button className="btn btn--primary">Начать тренировку</button>
