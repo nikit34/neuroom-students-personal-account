@@ -366,15 +366,7 @@ export default function App() {
                         }}
                       >
                         <div className="progress-ring__icon" aria-hidden="true">
-                          <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
-                            <polygon points="6,58 24,34 42,58" fill="#9aa0a6" />
-                            <polygon points="18,58 40,16 66,58" fill="#d1d5db" />
-                            <polygon points="34,28 40,16 46,28" fill="#f8fafc" />
-                            <polygon points="26,58 40,34 56,58" fill="#6b7280" opacity="0.55" />
-                            <path d="M5 58C15 49 20 62 30 54C39 47 43 64 52 56C60 49 64 60 68 58V66H5V58Z" fill="#22c55e" />
-                            <line x1="40" y1="16" x2="40" y2="7" stroke="#94a3b8" strokeWidth="2" />
-                            <polygon points="40,8 50,12 40,16" fill="#ef4444" />
-                          </svg>
+                          <span className="progress-ring__emoji">🏔️</span>
                         </div>
                       </div>
                       <div className="level-details">
