@@ -62,36 +62,57 @@
           <div class="date-chip">10 февраля 2026</div>
           <div class="weather-chip">Сегодня: чистый лист, без долгов</div>
         </div>
-        <div class="topbar-right">
-          <button class="ghost-btn">Задать вопрос</button>
-          <button class="primary-btn" data-view-target="assignment">Открыть новое ДЗ</button>
-        </div>
       </header>
 
       <section class="view is-active" data-view="home" id="view-home">
-        <div class="hero">
-          <div class="hero-card">
-            <div class="hero-tag">Новое задание</div>
-            <h1>Привет, Гермиона!</h1>
-            <p>
-              Учитель прислал ДЗ по русскому. Сделай фото, мы проверим и вернем
-              подробный разбор ошибок с подсказками.
-            </p>
-            <div class="hero-actions">
-              <button class="primary-btn" data-view-target="assignment">Сдать фото решения</button>
+        <div class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-title">Сейчас важно</div>
+              <div class="section-note">Новое задание и твой прогресс</div>
+            </div>
+          </div>
+
+          <div class="hero">
+            <div class="hero-card">
+              <div class="hero-tag">Новое задание</div>
+              <h1>Привет, Гермиона!</h1>
+              <p>
+                Учитель прислал ДЗ по русскому. Сделай фото, мы проверим и вернем
+                подробный разбор ошибок с подсказками.
+              </p>
+            </div>
+            <div class="hero-side">
+              <div class="progress-ring">
+                <div class="progress-ring__value">72%</div>
+              </div>
+              <div class="hero-side-title">Неделя без пропусков</div>
+              <div class="hero-side-note">Еще 1 задание и получишь новый уровень</div>
+            </div>
+          </div>
+
+          <div class="action-bar">
+            <div>
+              <div class="action-title">Действия по ДЗ</div>
+              <div class="action-note">Все важные кнопки собраны в одном месте</div>
+            </div>
+            <div class="action-buttons">
+              <button class="primary-btn" data-view-target="assignment">Открыть ДЗ</button>
+              <button class="ghost-btn">Задать вопрос</button>
               <button class="ghost-btn">Написать учителю</button>
             </div>
           </div>
-          <div class="hero-side">
-            <div class="progress-ring">
-              <div class="progress-ring__value">72%</div>
-            </div>
-            <div class="hero-side-title">Неделя без пропусков</div>
-            <div class="hero-side-note">Еще 1 задание и получишь новый уровень</div>
-          </div>
         </div>
 
-        <div class="grid three">
+        <div class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-title">Задания</div>
+              <div class="section-note">Что в работе и что уже проверено</div>
+            </div>
+          </div>
+
+          <div class="grid three">
           <div class="card card--accent">
             <div class="card-header">
               <span class="subject">Русский язык</span>
@@ -132,27 +153,37 @@
             </div>
             <button class="primary-btn" data-view-target="feedback">Открыть разбор</button>
           </div>
+          </div>
         </div>
 
-        <div class="grid two">
-          <div class="card">
-            <div class="card-title">План на сегодня</div>
-            <ul class="checklist">
-              <li>Сделать фото ДЗ по русскому</li>
-              <li>Проверить, что все страницы видны</li>
-              <li>Отправить на проверку</li>
-              <li>Прочитать прошлый разбор ошибок</li>
-            </ul>
-          </div>
-          <div class="card">
-            <div class="card-title">Поддержка от учителя</div>
-            <div class="note">
-              <div class="note-title">Совет дня</div>
-              <p>Если сомневаешься в правиле, отметь этот номер красным на фото — учитель увидит.</p>
+        <div class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-title">План и поддержка</div>
+              <div class="section-note">Помогаем пройти путь шаг за шагом</div>
             </div>
-            <div class="note">
-              <div class="note-title">Бонус</div>
-              <p>За фото без бликов начислим +1 звездочку к рейтингу внимательности.</p>
+          </div>
+
+          <div class="grid two">
+            <div class="card">
+              <div class="card-title">План на сегодня</div>
+              <ul class="checklist">
+                <li>Сделать фото ДЗ по русскому</li>
+                <li>Проверить, что все страницы видны</li>
+                <li>Отправить на проверку</li>
+                <li>Прочитать прошлый разбор ошибок</li>
+              </ul>
+            </div>
+            <div class="card">
+              <div class="card-title">Поддержка от учителя</div>
+              <div class="note">
+                <div class="note-title">Совет дня</div>
+                <p>Если сомневаешься в правиле, отметь этот номер красным на фото — учитель увидит.</p>
+              </div>
+              <div class="note">
+                <div class="note-title">Бонус</div>
+                <p>За фото без бликов начислим +1 звездочку к рейтингу внимательности.</p>
+              </div>
             </div>
           </div>
         </div>

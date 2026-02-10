@@ -197,12 +197,12 @@ body {
 .content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
 }
 
 .topbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   gap: 16px;
 }
@@ -287,7 +287,7 @@ body {
 .hero {
   display: grid;
   grid-template-columns: 1.6fr 1fr;
-  gap: 20px;
+  gap: 24px;
 }
 
 .hero-card {
@@ -370,7 +370,61 @@ body {
 
 .grid {
   display: grid;
-  gap: 18px;
+  gap: 24px;
+}
+
+.section {
+  display: grid;
+  gap: 16px;
+}
+
+.section + .section {
+  margin-top: 8px;
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.section-title {
+  font-family: "Unbounded", sans-serif;
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.section-note {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.action-bar {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.action-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.action-note {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .grid.two {
@@ -851,5 +905,18 @@ body {
 
   .error-compare {
     grid-template-columns: 1fr;
+  }
+
+  .action-bar {
+    align-items: flex-start;
+  }
+
+  .action-buttons {
+    width: 100%;
+  }
+
+  .action-buttons .primary-btn,
+  .action-buttons .ghost-btn {
+    flex: 1 1 160px;
   }
 }
