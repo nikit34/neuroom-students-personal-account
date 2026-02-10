@@ -385,10 +385,17 @@ body {
   border-radius: 50%;
 }
 
-.progress-ring__value {
+.progress-ring__icon {
   position: relative;
-  font-family: "Unbounded", sans-serif;
-  font-size: 18px;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+}
+
+.progress-ring__icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .level-details {
@@ -399,6 +406,11 @@ body {
 .level-xp {
   font-family: "Unbounded", sans-serif;
   font-size: 20px;
+}
+
+.level-progress {
+  font-size: 12px;
+  color: var(--ink-soft);
 }
 
 .level-note {
@@ -446,8 +458,8 @@ body {
   box-shadow: var(--shadow);
   padding: 18px 22px;
   display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
+  grid-template-columns: 1fr;
+  align-items: start;
   gap: 16px;
 }
 
@@ -462,27 +474,28 @@ body {
 }
 
 .cta-actions {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  display: grid;
+  gap: 10px;
+  width: 100%;
 }
 
 .cta-links {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
 }
 
 .btn--submit-main {
-  min-height: 68px;
-  padding: 14px 34px;
+  width: 100%;
+  min-height: 78px;
+  padding: 16px 24px;
   border-radius: 999px;
-  font-size: clamp(28px, 3.2vw, 40px);
+  font-size: clamp(30px, 5vw, 46px);
   font-weight: 700;
   line-height: 1;
+  letter-spacing: 0.01em;
 }
 
 .flow-steps {
