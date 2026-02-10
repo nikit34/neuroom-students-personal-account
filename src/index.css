@@ -153,10 +153,6 @@ body {
   gap: 8px;
 }
 
-.nav-block--muted {
-  opacity: 0.65;
-}
-
 .nav-label {
   font-size: 12px;
   text-transform: uppercase;
@@ -220,6 +216,7 @@ body {
 .topbar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
 }
 
@@ -259,6 +256,36 @@ body {
 .section-note {
   font-size: 12px;
   color: var(--ink-soft);
+}
+
+.topbar-right {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.more-wrapper {
+  position: relative;
+}
+
+.more-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(28, 27, 41, 0.12);
+  border: 1px solid var(--border);
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+  min-width: 180px;
+  z-index: 10;
+}
+
+.more-menu .btn {
+  width: 100%;
+  justify-content: flex-start;
 }
 
 .hero {
@@ -344,41 +371,17 @@ body {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 18px 22px;
-  display: grid;
-  gap: 16px;
-}
-
-.action-group {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
-  align-items: center;
 }
 
-.action-group--secondary {
-  padding-top: 12px;
-  border-top: 1px dashed var(--border);
-}
-
-.action-title {
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.action-note {
-  font-size: 12px;
-  color: var(--ink-soft);
-}
-
-.action-buttons {
+.action-main,
+.action-secondary {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-}
-
-.action-buttons--quiet .btn {
-  padding: 8px 14px;
 }
 
 .btn {
@@ -411,7 +414,7 @@ body {
 
 .btn--quiet {
   background: transparent;
-  border: 1px dashed rgba(28, 27, 41, 0.15);
+  border: 1px dashed rgba(28, 27, 41, 0.12);
   color: var(--ink-soft);
 }
 
@@ -889,15 +892,22 @@ body {
 }
 
 @media (max-width: 700px) {
-  .action-group {
+  .action-bar {
     align-items: flex-start;
   }
 
-  .action-buttons {
+  .action-main,
+  .action-secondary {
+    align-items: flex-start;
+  }
+
+  .action-main,
+  .action-secondary {
     width: 100%;
   }
 
-  .action-buttons .btn {
+  .action-main .btn,
+  .action-secondary .btn {
     flex: 1 1 160px;
   }
 

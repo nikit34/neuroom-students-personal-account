@@ -43,6 +43,7 @@ export default function App() {
   const [files, setFiles] = useState([]);
   const [assignmentStatus, setAssignmentStatus] = useState('new');
   const [toast, setToast] = useState('');
+  const [showMore, setShowMore] = useState(false);
 
   const previews = useMemo(
     () => files.map((file) => ({ file, url: URL.createObjectURL(file) })),
@@ -69,6 +70,11 @@ export default function App() {
   const handleSubmit = () => {
     setAssignmentStatus('review');
     setToast('Фото отправлены. Учитель проверит работу и пришлет разбор.');
+  };
+
+  const openView = (nextView) => {
+    setView(nextView);
+    setShowMore(false);
   };
 
   return (
@@ -101,31 +107,15 @@ export default function App() {
             <div className="nav-label">Основное</div>
             <button
               className={`nav-link ${view === 'home' ? 'is-active' : ''}`}
-              onClick={() => setView('home')}
+              onClick={() => openView('home')}
             >
               Главная
             </button>
             <button
               className={`nav-link ${view === 'assignment' ? 'is-active' : ''}`}
-              onClick={() => setView('assignment')}
+              onClick={() => openView('assignment')}
             >
               Сдать ДЗ
-            </button>
-          </div>
-
-          <div className="nav-block nav-block--muted">
-            <div className="nav-label">Сервис</div>
-            <button
-              className={`nav-link nav-link--muted ${view === 'feedback' ? 'is-active' : ''}`}
-              onClick={() => setView('feedback')}
-            >
-              Обратная связь
-            </button>
-            <button
-              className={`nav-link nav-link--muted ${view === 'profile' ? 'is-active' : ''}`}
-              onClick={() => setView('profile')}
-            >
-              Профиль
             </button>
           </div>
 
@@ -141,6 +131,23 @@ export default function App() {
             <div className="topbar-left">
               <div className="date-chip">10 февраля 2026</div>
               <div className="weather-chip">Сегодня: чистый лист, без долгов</div>
+            </div>
+            <div className="topbar-right">
+              <div className="more-wrapper">
+                <button className="btn btn--quiet" onClick={() => setShowMore((prev) => !prev)}>
+                  Ещё
+                </button>
+                {showMore && (
+                  <div className="more-menu">
+                    <button className="btn btn--ghost" onClick={() => openView('feedback')}>
+                      Обратная связь
+                    </button>
+                    <button className="btn btn--ghost" onClick={() => openView('profile')}>
+                      Профиль
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </header>
 
@@ -173,35 +180,17 @@ export default function App() {
                 </div>
 
                 <div className="action-bar">
-                  <div className="action-group">
-                    <div>
-                      <div className="action-title">Действия по ДЗ</div>
-                      <div className="action-note">Главные кнопки в одном месте</div>
-                    </div>
-                    <div className="action-buttons">
-                      <button className="btn btn--primary" onClick={() => setView('assignment')}>
-                        Сдать ДЗ
-                      </button>
-                      <button className="btn btn--ghost" onClick={() => setView('assignment')}>
-                        Открыть ДЗ
-                      </button>
-                      <button className="btn btn--ghost">Написать учителю</button>
-                      <button className="btn btn--ghost">Задать вопрос</button>
-                    </div>
+                  <div className="action-main">
+                    <button className="btn btn--primary" onClick={() => openView('assignment')}>
+                      Сдать ДЗ
+                    </button>
+                    <button className="btn btn--ghost" onClick={() => openView('history')}>
+                      Прошлые ДЗ
+                    </button>
                   </div>
-                  <div className="action-group action-group--secondary">
-                    <div>
-                      <div className="action-title">Сервис</div>
-                      <div className="action-note">Менее важные разделы</div>
-                    </div>
-                    <div className="action-buttons action-buttons--quiet">
-                      <button className="btn btn--quiet" onClick={() => setView('feedback')}>
-                        Обратная связь
-                      </button>
-                      <button className="btn btn--quiet" onClick={() => setView('profile')}>
-                        Профиль
-                      </button>
-                    </div>
+                  <div className="action-secondary">
+                    <button className="btn btn--quiet">Написать учителю</button>
+                    <button className="btn btn--quiet">Задать вопрос</button>
                   </div>
                 </div>
               </div>
@@ -228,8 +217,8 @@ export default function App() {
                       <span>Сдать до 14.02</span>
                       <span>~20 минут</span>
                     </div>
-                    <button className="btn btn--primary" onClick={() => setView('assignment')}>
-                      Открыть и сдать
+                    <button className="btn btn--primary" onClick={() => openView('assignment')}>
+                      Сдать ДЗ
                     </button>
                   </div>
 
@@ -257,7 +246,7 @@ export default function App() {
                       <span>Ошибки: 3</span>
                       <span>Сильная сторона: пунктуация</span>
                     </div>
-                    <button className="btn btn--primary" onClick={() => setView('feedback')}>
+                    <button className="btn btn--primary" onClick={() => openView('feedback')}>
                       Открыть разбор
                     </button>
                   </div>
@@ -301,7 +290,7 @@ export default function App() {
           {view === 'assignment' && (
             <section className="view">
               <div className="page-header">
-                <button className="btn btn--back" onClick={() => setView('home')}>
+                <button className="btn btn--back" onClick={() => openView('home')}>
                   ← На главную
                 </button>
                 <div>
@@ -389,7 +378,7 @@ export default function App() {
           {view === 'feedback' && (
             <section className="view">
               <div className="page-header">
-                <button className="btn btn--back" onClick={() => setView('home')}>
+                <button className="btn btn--back" onClick={() => openView('home')}>
                   ← На главную
                 </button>
                 <div>
@@ -466,10 +455,57 @@ export default function App() {
             </section>
           )}
 
+          {view === 'history' && (
+            <section className="view">
+              <div className="page-header">
+                <button className="btn btn--back" onClick={() => openView('home')}>
+                  ← На главную
+                </button>
+                <div>
+                  <div className="page-title">Прошлые домашние задания</div>
+                  <div className="page-sub">История сдач и оценок</div>
+                </div>
+                <span className="status status--done">Сданы</span>
+              </div>
+
+              <div className="grid grid--two">
+                <div className="card">
+                  <div className="card-header">
+                    <span className="subject">Русский язык</span>
+                    <span className="status status--done">Оценка 4</span>
+                  </div>
+                  <div className="card-title">Стр. 9–10, упр. 416</div>
+                  <p className="card-text">Списать, раскрывая скобки. Озаглавить текст.</p>
+                  <div className="card-meta">
+                    <span>Сдано 21.01</span>
+                    <span>Ошибки: 3</span>
+                  </div>
+                  <button className="btn btn--ghost" onClick={() => openView('feedback')}>
+                    Открыть разбор
+                  </button>
+                </div>
+
+                <div className="card">
+                  <div className="card-header">
+                    <span className="subject">Русский язык</span>
+                    <span className="status status--done">Оценка 5</span>
+                  </div>
+                  <div className="card-title">Диктант, 18.01</div>
+                  <p className="card-text">Заполнить пропуски, выделить основу предложения.</p>
+                  <div className="card-meta">
+                    <span>Сдано 18.01</span>
+                    <span>Ошибки: 1</span>
+                  </div>
+                  <button className="btn btn--ghost">Посмотреть работу</button>
+                </div>
+              </div>
+            </section>
+          )}
+
           {view === 'profile' && (
             <section className="view">
               <div className="page-header">
-                <button className="btn btn--back" onClick={() => setView('home')}>
+                <button className="btn btn--back" onClick={() => openView('home')}>
                   ← На главную
                 </button>
                 <div>
