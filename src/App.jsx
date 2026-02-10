@@ -38,6 +38,37 @@ function StatusPill({ status }) {
   return <span className={className}>{label}</span>;
 }
 
+function MountainBadgeIcon() {
+  return (
+    <svg
+      className="progress-ring__mountain"
+      viewBox="0 0 64 64"
+      role="img"
+      aria-label="Гора прогресса"
+    >
+      <defs>
+        <linearGradient id="mountainMain" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stopColor="#f6f7fa" />
+          <stop offset="100%" stopColor="#8a909a" />
+        </linearGradient>
+        <linearGradient id="mountainSide" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stopColor="#b8bdc7" />
+          <stop offset="100%" stopColor="#6f7480" />
+        </linearGradient>
+      </defs>
+      <path d="M8 54L30 14L52 54H8Z" fill="url(#mountainMain)" />
+      <path d="M30 14L52 54H34L26 38L30 14Z" fill="url(#mountainSide)" />
+      <path d="M16 54L23 43L29 54H16Z" fill="#c8ccd4" />
+      <path d="M7 54C10 50 14 50 17 54H7Z" fill="#24bf63" />
+      <path d="M16 54C19 50 24 50 28 54H16Z" fill="#2ecc71" />
+      <path d="M27 54C31 49 36 49 40 54H27Z" fill="#28b463" />
+      <path d="M39 54C42 50 47 50 51 54H39Z" fill="#20b15a" />
+      <path d="M29.5 14V6.5" stroke="#7e848e" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M29.5 7L37 11L29.5 14V7Z" fill="#ff5a52" />
+    </svg>
+  );
+}
+
 export default function App() {
   const MAX_FILES = 6;
   const LEVEL_DATA = {
@@ -215,6 +246,7 @@ export default function App() {
     () => (includeGradeInFriendShare ? 'с оценкой' : 'без оценки'),
     [includeGradeInFriendShare]
   );
+  const isHomeView = view === 'home';
 
   const handleCopyFriendBeforeLink = async () => {
     await copyText(friendShareBeforeLink, 'Ссылка для друга (до проверки) скопирована.');
@@ -290,208 +322,118 @@ export default function App() {
         </aside>
 
         <main className="content">
-          <header className="topbar">
-            <div className="topbar-left">
-              <div className="date-chip">10 февраля 2026</div>
-              <div className="weather-chip">Сегодня: чистый лист, без долгов</div>
-              <div className="mobile-student">Гермиона • 5Б</div>
-            </div>
-            <div className="topbar-right">
-              <div className="more-wrapper">
-                <button className="btn btn--quiet" onClick={() => setShowMore((prev) => !prev)}>
-                  Ещё
-                </button>
-                {showMore && (
-                  <div className="more-menu">
-                    <button className="btn btn--ghost" onClick={() => openView('feedback')}>
-                      Обратная связь
-                    </button>
-                    <button className="btn btn--ghost" onClick={() => openView('profile')}>
-                      Профиль
-                    </button>
-                  </div>
-                )}
+          {!isHomeView && (
+            <header className="topbar">
+              <div className="topbar-left">
+                <div className="date-chip">10 февраля 2026</div>
+                <div className="weather-chip">Сегодня: чистый лист, без долгов</div>
+                <div className="mobile-student">Гермиона • 5Б</div>
               </div>
-            </div>
-          </header>
+              <div className="topbar-right">
+                <div className="more-wrapper">
+                  <button className="btn btn--quiet" onClick={() => setShowMore((prev) => !prev)}>
+                    Ещё
+                  </button>
+                  {showMore && (
+                    <div className="more-menu">
+                      <button className="btn btn--ghost" onClick={() => openView('feedback')}>
+                        Обратная связь
+                      </button>
+                      <button className="btn btn--ghost" onClick={() => openView('profile')}>
+                        Профиль
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </header>
+          )}
 
           {view === 'home' && (
             <section className="view">
-              <div className="section">
-                <div className="cta-panel">
-                  <div>
-                    <div className="cta-title">Сдать домашнее задание</div>
-                    <div className="cta-note">Самый быстрый путь к разбору от учителя</div>
-                  </div>
-                  <div className="cta-actions">
-                    <button
-                      className="btn btn--primary btn--submit-main"
-                      onClick={() => openView('assignment')}
-                    >
-                      Сдать ДЗ
-                    </button>
-                    <div className="cta-links">
-                      <button className="btn btn--text">Написать учителю</button>
-                      <button className="btn btn--text">Задать вопрос</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="section-head">
-                  <div>
-                    <div className="section-title">Сейчас важно</div>
-                    <div className="section-note">Новое задание и твой прогресс</div>
-                  </div>
-                </div>
-
-                <div className="hero">
-                  <div className="hero-card">
-                    <div className="hero-tag">Новое задание</div>
-                    <h1>Привет, Гермиона!</h1>
-                    <p>
-                      Учитель прислал ДЗ по русскому. Сделай фото, мы проверим и вернем
-                      подробный разбор ошибок с подсказками.
-                    </p>
-                  </div>
-                  <div className="hero-side">
-                    <div className="level-header">
-                      <div className="level-kicker">Твой прогресс</div>
-                      <div className="level-route">{LEVEL_DATA.currentLevel} → {LEVEL_DATA.nextLevel}</div>
-                    </div>
-                    <div className="level-main">
-                      <div
-                        className="progress-ring"
-                        style={{
-                          background: `conic-gradient(var(--accent-2) 0 ${levelProgressDeg}deg, #e9f4f4 ${levelProgressDeg}deg 360deg)`
-                        }}
-                      >
-                        <div className="progress-ring__icon" aria-hidden="true">
-                          <span className="progress-ring__emoji">🏔️</span>
-                        </div>
-                      </div>
-                      <div className="level-details">
-                        <div className="level-xp">{LEVEL_DATA.currentXp} / {LEVEL_DATA.targetXp} XP</div>
-                        <div className="level-progress">Прогресс уровня: {levelPercent}%</div>
-                        <div className="level-note">Осталось {xpRemaining} XP до следующего уровня</div>
-                        <div className="level-streak">Серия: {LEVEL_DATA.streakDays} дней без пропусков</div>
-                      </div>
-                    </div>
-                    <div className="xp-sources">
-                      <span className="xp-chip">+120 за сдачу ДЗ</span>
-                      <span className="xp-chip">+80 за просмотр разбора</span>
-                      <span className="xp-chip">+150 за квиз AI‑репетитора</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flow-steps">
-                  <div className="flow-step is-current">
-                    <div className="flow-title">1. Сдать ДЗ</div>
-                    <div className="flow-note">1–3 фото, без бликов</div>
-                  </div>
-                  <div className="flow-step is-ready">
-                    <div className="flow-title">2. Посмотреть разбор</div>
-                    <div className="flow-note">Главное — обратная связь. Разбор уже готов.</div>
-                  </div>
-                  <div className="flow-step">
-                    <div className="flow-title">3. Закрепить тему</div>
-                    <div className="flow-note">Мини‑квизы → ачивка</div>
-                  </div>
+              <div className="card focus-hero">
+                <div className="hero-tag">Новое задание</div>
+                <h1>Привет, Гермиона!</h1>
+                <p>
+                  Учитель прислал ДЗ по русскому. Сделай фото, мы проверим работу и вернем
+                  разбор ошибок с подсказками.
+                </p>
+                <button
+                  className="btn btn--primary btn--submit-main"
+                  onClick={() => openView('assignment')}
+                >
+                  Сдать ДЗ
+                </button>
+                <div className="hero-inline-actions">
+                  <button className="btn btn--text">Написать учителю</button>
+                  <button className="btn btn--text">Задать вопрос</button>
                 </div>
               </div>
 
-              <div className="section">
-                <div className="section-head">
-                  <div>
-                    <div className="section-title">Задания</div>
-                    <div className="section-note">Что в работе и что уже проверено</div>
-                  </div>
-                  <button className="btn btn--ghost btn--small" onClick={() => openView('history')}>
-                    Прошлые ДЗ
+              <div className="grid grid--three focus-grid">
+                <div className="card focus-step">
+                  <div className="focus-step__label">Шаг 1</div>
+                  <div className="card-title">Сдать ДЗ</div>
+                  <p className="card-text">Камера — основной путь. 1–3 четких фото без бликов.</p>
+                  <StatusPill status={assignmentStatus} />
+                  <button className="btn btn--primary" onClick={() => openView('assignment')}>
+                    Открыть камеру
                   </button>
                 </div>
 
-                <div className="grid grid--three">
-                  <div className="card card--accent">
-                    <div className="card-header">
-                      <span className="subject">Русский язык</span>
-                      <StatusPill status={assignmentStatus} />
-                    </div>
-                    <div className="card-title">Упр. 416, стр. 9–10</div>
-                    <p className="card-text">
-                      Списать текст, раскрывая скобки. Вставить пропущенные буквы и знаки.
-                    </p>
-                    <div className="card-meta">
-                      <span>Сдать до 14.02</span>
-                      <span>~20 минут</span>
-                    </div>
-                    <button className="btn btn--primary" onClick={() => openView('assignment')}>
-                      Сдать ДЗ
-                    </button>
-                  </div>
+                <div className="card focus-step">
+                  <div className="focus-step__label">Шаг 2</div>
+                  <div className="card-title">Получить разбор</div>
+                  <p className="card-text">
+                    {assignmentStatus === 'review'
+                      ? 'Учитель проверяет работу. Вернись сюда за обратной связью.'
+                      : 'Смотри ошибки и подсказки. Главное — понять, как улучшить результат.'}
+                  </p>
+                  <button className="btn btn--ghost" onClick={() => openView('feedback')}>
+                    Открыть разбор
+                  </button>
+                </div>
 
-                  <div className="card">
-                    <div className="card-header">
-                      <span className="subject">Математика</span>
-                      <StatusPill status="review" />
+                <div className="card focus-step focus-step--progress">
+                  <div className="focus-step__label">Шаг 3</div>
+                  <div className="card-title">AI‑репетитор</div>
+                  <div className="progress-compact">
+                    <div
+                      className="progress-ring"
+                      style={{
+                        background: `conic-gradient(var(--accent-2) 0 ${levelProgressDeg}deg, #e9f4f4 ${levelProgressDeg}deg 360deg)`
+                      }}
+                    >
+                      <div className="progress-ring__icon" aria-hidden="true">
+                        <MountainBadgeIcon />
+                      </div>
                     </div>
-                    <div className="card-title">Задачи 3, 4, 5</div>
-                    <p className="card-text">Фото отправлены вчера в 19:40</p>
-                    <div className="card-meta">
-                      <span>Ответ учителя до 11.02</span>
+                    <div className="level-details">
+                      <div className="level-route">{LEVEL_DATA.currentLevel} → {LEVEL_DATA.nextLevel}</div>
+                      <div className="level-progress">Прогресс: {levelPercent}%</div>
+                      <div className="level-note">Осталось {xpRemaining} XP до нового уровня</div>
                     </div>
-                    <button className="btn btn--ghost">Посмотреть отправку</button>
                   </div>
-
-                  <div className="card">
-                    <div className="card-header">
-                      <span className="subject">Русский язык</span>
-                      <StatusPill status="done" />
-                    </div>
-                    <div className="card-title">Диктант, 21.01</div>
-                    <p className="card-text">Оценка 4 и подробный разбор ошибок с подсказками.</p>
-                    <div className="card-meta">
-                      <span>Ошибки: 3</span>
-                      <span>Сильная сторона: пунктуация</span>
-                    </div>
-                    <button className="btn btn--primary" onClick={() => openView('feedback')}>
-                      Открыть разбор
-                    </button>
-                  </div>
+                  <button className="btn btn--ghost" onClick={() => openView('feedback')}>
+                    Перейти к тренировке
+                  </button>
                 </div>
               </div>
 
-              <div className="section">
-                <div className="section-head">
-                  <div>
-                    <div className="section-title">План и поддержка</div>
-                    <div className="section-note">Помогаем пройти путь шаг за шагом</div>
-                  </div>
+              <details className="card secondary-panel">
+                <summary>Не срочно</summary>
+                <div className="secondary-actions">
+                  <button className="btn btn--ghost btn--small" onClick={() => openView('history')}>
+                    Прошлые ДЗ
+                  </button>
+                  <button className="btn btn--ghost btn--small" onClick={() => openView('feedback')}>
+                    Обратная связь
+                  </button>
+                  <button className="btn btn--ghost btn--small" onClick={() => openView('profile')}>
+                    Профиль
+                  </button>
                 </div>
-
-                <div className="grid grid--two">
-                  <div className="card">
-                    <div className="card-title">План на сегодня</div>
-                    <ul className="checklist">
-                      <li>Сделать фото ДЗ по русскому</li>
-                      <li>Проверить, что все страницы видны</li>
-                      <li>Отправить на проверку</li>
-                      <li>Прочитать прошлый разбор ошибок</li>
-                    </ul>
-                  </div>
-                  <div className="card">
-                    <div className="card-title">Поддержка от учителя</div>
-                    <div className="note">
-                      <div className="note-title">Совет дня</div>
-                      <p>Если сомневаешься в правиле, отметь этот номер красным на фото — учитель увидит.</p>
-                    </div>
-                    <div className="note">
-                      <div className="note-title">Бонус</div>
-                      <p>За фото без бликов начислим +1 звездочку к рейтингу внимательности.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              </details>
             </section>
           )}
 
@@ -588,80 +530,6 @@ export default function App() {
                 </div>
 
                 <div className="card">
-                  <div className="card-title">Поделиться с родителем (необязательно)</div>
-                  <div className="approval-row">
-                    <div>
-                      <div className="approval-title">Текущая версия решения</div>
-                      <div className="approval-meta">v{version} · {files.length || 0} фото</div>
-                    </div>
-                    <div className="share-actions">
-                      <button className="btn btn--ghost" onClick={handleShare}>
-                        Создать ссылку
-                      </button>
-                      <button className="btn btn--ghost" onClick={handleCopyParentLink}>
-                        Копировать
-                      </button>
-                      <button className="btn btn--telegram" onClick={handleTelegramParentShare}>
-                        Telegram
-                      </button>
-                    </div>
-                  </div>
-                  {hasShare && (
-                    <div className="approval-box">
-                      <div className="approval-status">
-                        {shareIsCurrent ? 'Ссылка актуальна' : 'Ссылка на прошлую версию'}
-                      </div>
-                      <div className="approval-link">{shareLink}</div>
-                      <div className="approval-note">
-                        {shareIsCurrent
-                          ? 'Отправь ссылку родителю в Telegram или мессенджер.'
-                          : `Ссылка была создана для версии v${shareVersion}. Чтобы родитель видел актуальную работу, создай новую.`}
-                      </div>
-                    </div>
-                  )}
-                  <div className="approval-row approval-row--compact">
-                    <div>
-                      <div className="approval-title">Одобрение родителя</div>
-                      <div className="approval-meta">
-                        {!hasApproval && 'Пока не одобрено'}
-                        {hasApproval && approvalIsCurrent && `Одобрено для версии v${approvedVersion}`}
-                        {hasApproval && !approvalIsCurrent && `Одобрено для версии v${approvedVersion}, текущая v${version}`}
-                      </div>
-                    </div>
-                    <button className="btn btn--quiet" onClick={handleApprove}>
-                      Родитель одобрил
-                    </button>
-                  </div>
-                  <div className="approval-footnote">
-                    Одобрение фиксируется за версией. После любых правок нужна новая ссылка.
-                  </div>
-                  {hasApproval && !approvalIsCurrent && (
-                    <div className="approval-warning">
-                      Родитель одобрил другую версию. Если ты что-то дописал — отправь новую ссылку.
-                    </div>
-                  )}
-                </div>
-
-                <div className="card share-card">
-                  <div>
-                    <div className="card-title">Поделиться с другом до проверки</div>
-                    <p className="card-text">
-                      Отправь другу черновик решения. Здесь всегда без оценки, потому что проверка еще не завершена.
-                    </p>
-                  </div>
-                  <div className="share-stage">Режим: до проверки</div>
-                  <div className="share-link">{friendShareBeforeLink}</div>
-                  <div className="share-actions">
-                    <button className="btn btn--ghost" onClick={handleCopyFriendBeforeLink}>
-                      Копировать ссылку
-                    </button>
-                    <button className="btn btn--telegram" onClick={handleTelegramFriendBeforeShare}>
-                      Отправить в Telegram
-                    </button>
-                  </div>
-                </div>
-
-                <div className="card">
                   <div className="card-title">Проверь перед отправкой</div>
                 <div className="grid grid--three">
                   <div className="check-card">
@@ -678,6 +546,85 @@ export default function App() {
                   </div>
                 </div>
               </div>
+
+                <details className="card secondary-panel">
+                  <summary>Поделиться решением (необязательно)</summary>
+                  <div className="secondary-stack">
+                    <div className="secondary-box">
+                      <div className="card-title">Поделиться с родителем</div>
+                      <div className="approval-row">
+                        <div>
+                          <div className="approval-title">Текущая версия решения</div>
+                          <div className="approval-meta">v{version} · {files.length || 0} фото</div>
+                        </div>
+                        <div className="share-actions">
+                          <button className="btn btn--ghost" onClick={handleShare}>
+                            Создать ссылку
+                          </button>
+                          <button className="btn btn--ghost" onClick={handleCopyParentLink}>
+                            Копировать
+                          </button>
+                          <button className="btn btn--telegram" onClick={handleTelegramParentShare}>
+                            Telegram
+                          </button>
+                        </div>
+                      </div>
+                      {hasShare && (
+                        <div className="approval-box">
+                          <div className="approval-status">
+                            {shareIsCurrent ? 'Ссылка актуальна' : 'Ссылка на прошлую версию'}
+                          </div>
+                          <div className="approval-link">{shareLink}</div>
+                          <div className="approval-note">
+                            {shareIsCurrent
+                              ? 'Отправь ссылку родителю в Telegram или мессенджер.'
+                              : `Ссылка была создана для версии v${shareVersion}. Чтобы родитель видел актуальную работу, создай новую.`}
+                          </div>
+                        </div>
+                      )}
+                      <div className="approval-row approval-row--compact">
+                        <div>
+                          <div className="approval-title">Одобрение родителя</div>
+                          <div className="approval-meta">
+                            {!hasApproval && 'Пока не одобрено'}
+                            {hasApproval && approvalIsCurrent && `Одобрено для версии v${approvedVersion}`}
+                            {hasApproval && !approvalIsCurrent && `Одобрено для версии v${approvedVersion}, текущая v${version}`}
+                          </div>
+                        </div>
+                        <button className="btn btn--quiet" onClick={handleApprove}>
+                          Родитель одобрил
+                        </button>
+                      </div>
+                      <div className="approval-footnote">
+                        Одобрение фиксируется за версией. После любых правок нужна новая ссылка.
+                      </div>
+                      {hasApproval && !approvalIsCurrent && (
+                        <div className="approval-warning">
+                          Родитель одобрил другую версию. Если ты что-то дописал, отправь новую ссылку.
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="secondary-box share-card">
+                      <div>
+                        <div className="card-title">Поделиться с другом до проверки</div>
+                        <p className="card-text">
+                          Отправь другу черновик решения. Этот вариант всегда без оценки.
+                        </p>
+                      </div>
+                      <div className="share-stage">Режим: до проверки</div>
+                      <div className="share-link">{friendShareBeforeLink}</div>
+                      <div className="share-actions">
+                        <button className="btn btn--ghost" onClick={handleCopyFriendBeforeLink}>
+                          Копировать ссылку
+                        </button>
+                        <button className="btn btn--telegram" onClick={handleTelegramFriendBeforeShare}>
+                          Отправить в Telegram
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </details>
             </section>
           )}
 
@@ -770,36 +717,6 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="card share-card">
-                <div>
-                  <div className="card-title">Поделиться с другом после проверки</div>
-                  <p className="card-text">
-                    Можно выбрать, показывать оценку или нет при формировании ссылки.
-                  </p>
-                </div>
-                <div className="share-stage">Режим: после проверки</div>
-                <div className="share-controls">
-                  <label className="toggle-option">
-                    <input
-                      type="checkbox"
-                      checked={includeGradeInFriendShare}
-                      onChange={(event) => setIncludeGradeInFriendShare(event.target.checked)}
-                    />
-                    <span>Показывать оценку</span>
-                  </label>
-                </div>
-                <div className="share-summary">Вариант ссылки: {friendShareAfterSummary}</div>
-                <div className="share-link">{friendShareAfterLink}</div>
-                <div className="share-actions">
-                  <button className="btn btn--ghost" onClick={handleCopyFriendAfterLink}>
-                    Копировать ссылку
-                  </button>
-                  <button className="btn btn--telegram" onClick={handleTelegramFriendAfterShare}>
-                    Отправить в Telegram
-                  </button>
-                </div>
-              </div>
-
               <div className="card ai-card">
                 <div>
                   <div className="card-title">AI‑репетитор: улучшить результат</div>
@@ -819,6 +736,38 @@ export default function App() {
                   <button className="btn btn--ghost">План исправлений</button>
                 </div>
               </div>
+
+              <details className="card secondary-panel">
+                <summary>Поделиться с другом после проверки</summary>
+                <div className="secondary-stack">
+                  <div className="secondary-box share-card">
+                    <p className="card-text">
+                      Можно выбрать, показывать оценку или нет при формировании ссылки.
+                    </p>
+                    <div className="share-stage">Режим: после проверки</div>
+                    <div className="share-controls">
+                      <label className="toggle-option">
+                        <input
+                          type="checkbox"
+                          checked={includeGradeInFriendShare}
+                          onChange={(event) => setIncludeGradeInFriendShare(event.target.checked)}
+                        />
+                        <span>Показывать оценку</span>
+                      </label>
+                    </div>
+                    <div className="share-summary">Вариант ссылки: {friendShareAfterSummary}</div>
+                    <div className="share-link">{friendShareAfterLink}</div>
+                    <div className="share-actions">
+                      <button className="btn btn--ghost" onClick={handleCopyFriendAfterLink}>
+                        Копировать ссылку
+                      </button>
+                      <button className="btn btn--telegram" onClick={handleTelegramFriendAfterShare}>
+                        Отправить в Telegram
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </details>
             </section>
           )}
 
