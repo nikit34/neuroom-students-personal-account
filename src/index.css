@@ -1575,3 +1575,9 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 460px) {
+  .focus-hero h1 {
+    font-size: 40px;
+  }
+}
